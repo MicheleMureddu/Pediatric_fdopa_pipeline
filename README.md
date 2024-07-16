@@ -70,7 +70,7 @@ Our pipeline takes in input both static and dynamic PET scans. For dynamic PET t
   
 Current framework is organized in five interconnected modules: Preprocessing, Coregistration, Region selection, Tumour segmentation, Static and Dynamic parameters extraction.
 	<div style="text-align: center;">
-	<img src="Pipeline_structure.png" alt="Pipeline Diagram" width="600" height="480"/>
+	<img src="Pipeline_structure.png" alt="Pipeline Diagram" width="650" height="480"/>
 	</div>
 
 ### Command to run from terminal: 
