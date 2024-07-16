@@ -84,6 +84,11 @@ python3 pediatric_fdopa_pipeline.py -i /Path for input data directory -o/Path fo
 * -a : Path for stereotaxic label file; default='atlas/dka.nii.gz'
 * -vol_MRI : Path for flair tumor masks; default='tumor_MRI/'
 
+### Pre-Processing:
+### Coregistration:
+### Region Selection:
+### Tumor Segmentation:
+### Static and Dynamic parameters extraction:
 ### Warning
 
 The pipeline does not keep track of whether upstream files (e.g., *file_1*) are older than downstream files (e.g., *file_n*). Hence, if you delete an upstream file and rerun the pipline, it will not create a new version of the downstream file.
