@@ -101,6 +101,7 @@ We first checked within the flair lesion the values of T/S and T/N. If both were
 * SUVr = PET / max(ref)
 * tumor_voxels = SUVr > 1
 ### Static and Dynamic parameters extraction:
+Static parameters include the tumor-to-striatum ratio and tumor-to-reference ratio. Dynamic parameters, derived from the Time Activity Curve (TAC), include time-to-peak, tumor curve slope, striatum curve slope, and dynamic slope ratio.
 
 ### Warning
 
