@@ -85,10 +85,23 @@ python3 pediatric_fdopa_pipeline.py -i /Path for input data directory -o/Path fo
 * -vol_MRI : Path for flair tumor masks; default='tumor_MRI/'
 
 ### Pre-Processing:
+FLAIR MRI tumour volumes were segmented using MRIcroGL's semi-automatic region-growing tool, with central lesion portions as seeding points. Parameters such as VOI radius and initial point difference were adjusted for refinement, and the resulting binary images were saved as NIfTI files. A closing operator was used to improve mask uniformity.
+To address significant non-encephalic uptake in [18F]F-DOPA PET images, skull stripping was performed on FLAIR MRI using FSL's BET tool, creating masks to isolate the brain.
+The Desikan-Killiany atlas automated the identification of white matter and corpus striatum regions. Erosion of white matter volumes was done to mitigate spillover effects and separate reference region signals from adjacent structures.
 ### Coregistration:
+This module coregisters the Montreal Neurological Institute (MNI), Desikan-Killiany atlas (DKA) and all FLAIR MRI volumes into the PET coordinate space. The process involves two main steps: aligning the MRI volume with the PET and then aligning the MNI atlas with the MRI.
+The MRI volume is aligned with the PET volume using Python’s ANTspy library.
+A rigid body (6 parameter) linear transformation is applied since both images are from the same subject.
+The MNI atlas is aligned to the MRI using a non-linear transformation with ANTs.
+MNI to PET coordinate transformations are then applied to the DKA and tumor VOI, warping them into PET coordinate space using nearest neighbor interpolation.
 ### Region Selection:
+We focused on individuals with hemispheric or subtentorial tumours. For hemispheric tumours, we employed the white matter of the opposite hemisphere as the reference region and verified this selection in roi_selection.py by overlaying the flair tumour masks on key brain regions. Subtentorial tumours were consistently analyzed using the left hemisphere as the reference region.
 ### Tumor Segmentation:
+We first checked within the flair lesion the values of T/S and T/N. If both were < 1, the pipeline skips the segmentation and employes the flair tumor masks. Otherwise, we find tumor voxels by employing a thresholding algorithm:
+* SUVr = PET / max(ref)
+* tumor_voxels = SUVr > 1
 ### Static and Dynamic parameters extraction:
+
 ### Warning
 
 The pipeline does not keep track of whether upstream files (e.g., *file_1*) are older than downstream files (e.g., *file_n*). Hence, if you delete an upstream file and rerun the pipline, it will not create a new version of the downstream file.
