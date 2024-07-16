@@ -69,7 +69,7 @@ Our pipeline takes in input both static and dynamic PET scans. For dynamic PET t
 * pediatric_fdopa_pipeline.py contains calls for all submodules.
 
 Current framework is organized in five interconnected modules: Preprocessing, Coregistration, Region selection, Tumour segmentation, Static and Dynamic parameters extraction.
-<div style="text-align: right;">
+<div style="text-align: center;">
 <img src="Pipeline_structure.png" alt="Pipeline Diagram" width="680" height="480"/>
 </div>
 
