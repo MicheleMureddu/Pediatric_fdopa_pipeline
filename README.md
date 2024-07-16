@@ -61,13 +61,17 @@ Our pipeline takes in input both static and dynamic PET scans. For dynamic PET t
 
 ### How to run:
 * Organize your data as above
+  
 * Download (or git clone) this repository
+  
 * Add a repository 'tumor_MRI', containing the mask of MRI lesion for each subjcet
+  
 * pediatric_fdopa_pipeline.py contains calls for all submodules.
+  
 Current framework is organized in five interconnected modules: Preprocessing, Coregistration, Region selection, Tumour segmentation, Static and Dynamic parameters extraction.
 
 ## Command to run from terminal: 
-python3 pediatric_fdopa_pipeline.py
+python3 pediatric_fdopa_pipeline.py -i /Path for input data directory -o/Path for output file directory
 
 ### User options
 
@@ -75,6 +79,7 @@ python3 pediatric_fdopa_pipeline.py
 * -o : Path for output file directory
 * -s : Path for stereotaxic template file; default=atlas/mni_icbm152_t1_tal_nlin_asym_09c.nii.gz
 * -a : Path for stereotaxic label file; default='atlas/dka.nii.gz'
+* -vol_MRI : Path for flair tumor masks; default='tumor_MRI/'
 
 ### Warning
 
