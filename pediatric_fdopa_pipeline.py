@@ -91,10 +91,16 @@ if __name__ == '__main__' :
                 ratio_data.append({'subject': subject.sub, 'percentage': subject.tum_percentage})
         
     # Concatenate dynamic parameters dataframes
-    dy_param_df = pd.concat(dy_param_data)
+    if dy_param_data:
+        dy_param_df = pd.concat(dy_param_data)
+    else:
+        dy_param_df = pd.DataFrame()  
 
     # Concatenate tumor percentage data
-    df_ratio = pd.DataFrame(ratio_data)
+    if ratio_data:
+        df_ratio = pd.DataFrame(ratio_data)
+    else:
+        df_ratio = pd.DataFrame() 
 
     # Write dataframes to CSV files
     dy_param_df.to_csv(dynamic_parameters, index=False)
