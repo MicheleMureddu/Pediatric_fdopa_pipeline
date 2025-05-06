@@ -1,5 +1,7 @@
 # Pediatric FDOPA Pipeline
 
+### Updating lesions from FLAIR MRI ###
+
 ## About
 
 Our pipeline is designed to assist nuclear medicine physicians in their clinical workflow by extracting both static (T/S and T/N) and dynamic parameters (slope, time to peak, and dynamic slope ratio) from 18F-FDOPA PET images of pediatric brain tumors. Implemented using open-source Python libraries, the pipeline automates the entire process from coregistration to parameter extraction. Additionally, we propose a method for visualizing intra-tumoral regions, providing a comprehensive tool for clinical evaluation and decision-making.
