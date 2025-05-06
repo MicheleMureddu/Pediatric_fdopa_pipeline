@@ -2,11 +2,11 @@ import numpy as np
 import nibabel as nib
 import re
 import os
-os.environ["OMP_NUM_THREADS"] = "30"  # export OMP_NUM_THREADS=1
-os.environ["OPENBLAS_NUM_THREADS"] = "30" # export OPENBLAS_NUM_THREADS=1
-os.environ["MKL_NUM_THREADS"] = "30"  # export MKL_NUM_THREADS=1
-os.environ["VECLIB_MAXIMUM_THREADS"] = "30" # export VECLIB_MAXIMUM_THREADS=1
-os.environ["NUMEXPR_NUM_THREADS"] = "30"  # export NUMEXPR_NUM_THREADS=1
+os.environ["OMP_NUM_THREADS"] = "20"  # export OMP_NUM_THREADS=1
+os.environ["OPENBLAS_NUM_THREADS"] = "20" # export OPENBLAS_NUM_THREADS=1
+os.environ["MKL_NUM_THREADS"] = "20"  # export MKL_NUM_THREADS=1
+os.environ["VECLIB_MAXIMUM_THREADS"] = "20" # export VECLIB_MAXIMUM_THREADS=1
+os.environ["NUMEXPR_NUM_THREADS"] = "20"  # export NUMEXPR_NUM_THREADS=1
 import ants
 import argparse
 import pandas as pd
@@ -32,7 +32,8 @@ def get_parser():
     parser.add_argument("-o",dest="out_dir", default='output/', help="Path for output file directory")
     parser.add_argument("-s",dest="stx_fn", default='atlas/mni_icbm152_t1_tal_nlin_asym_09c.nii.gz', help="Path for stereotaxic template file")
     parser.add_argument("-a",dest="atlas_fn", default='atlas/dka_atlas_eroded.nii.gz', help="Path for stereotaxic label file")
-    parser.add_argument("--vol_MRI", dest="flair_tumor", default='tumor_MRI/', help="Path for MRI volume")
+    parser.add_argument("-b",dest="atlas_brats", default='atlas/T1.nii.gz', help="Path for stereotaxic label file")
+    parser.add_argument("--vol_MRI", dest="flair_tumor", default='Lesions_TL/final_preds_fold3/', help="Path for MRI volume")
     return parser
 
 if __name__ == '__main__' :
@@ -44,6 +45,7 @@ if __name__ == '__main__' :
     print('\t\tOutput directory:', opts.out_dir)
     print('\t\tTemplate:',opts.stx_fn)
     print('\t\tAtlas:', opts.atlas_fn)
+    print('\t\tAtlas Brats:', opts.atlas_brats)
     print('\t\tTumor:', opts.flair_tumor)
     print()
 
@@ -68,7 +70,7 @@ if __name__ == '__main__' :
     print()
         
     # Create a list of instances of the Subject class. 
-    subject_list = [ Subject(opts.data_dir, opts.out_dir, sub, opts.stx_fn, opts.atlas_fn, opts.flair_tumor) for sub in subject_id_list ]
+    subject_list = [ Subject(opts.data_dir, opts.out_dir, sub, opts.stx_fn, opts.atlas_fn, opts.atlas_brats, opts.flair_tumor) for sub in subject_id_list ]
     
     # Do initial processing for each subject (e.g., alignment to MRI and stereotaxic atlas)
     [ subj.process() for subj in subject_list ] 
@@ -90,13 +92,12 @@ if __name__ == '__main__' :
             if (subject.bool_flag):
                 ratio_data.append({'subject': subject.sub, 'percentage': subject.tum_percentage})
         
-    # Concatenate dynamic parameters dataframes
     if dy_param_data:
         dy_param_df = pd.concat(dy_param_data)
     else:
         dy_param_df = pd.DataFrame()  
 
-    # Concatenate tumor percentage data
+    
     if ratio_data:
         df_ratio = pd.DataFrame(ratio_data)
     else:
@@ -107,4 +108,5 @@ if __name__ == '__main__' :
     df_ratio.to_csv(H_tumor_percentage, index=False)
 
     print()
+
 
