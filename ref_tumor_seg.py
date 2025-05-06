@@ -45,7 +45,7 @@ def create_tumor_label_volume(atlas, tumor_label, tumor_flair):
     This function eliminate small connceted components from PET tumour and combined this mask with the FLAIR tumour. the output will be used for 
     calculation of the probability distance map
     '''
-    tumor_label_volume = np.zeros_like(atlas)
+    tumor_label_volume = np.zeros_like(tumor_flair)
     tumor_label_volume[(atlas == tumor_label) | (tumor_flair == 1)] = 1
 
     labels, _ = label(tumor_label_volume)
@@ -136,7 +136,8 @@ def ref_seg(subj):
 
     tumor_MRI_hd = nib.load(subj.volume_MRI)
     tumor_MRI_vol = np.rint(tumor_MRI_hd.get_fdata()).astype(int)
-
+    
+    
     if not os.path.exists(subj.tumor_lab):
         tumor_label_volume = create_tumor_label_volume(subj.tumor_atlas, subj.tumor_label, tumor_MRI_vol)
         nib.Nifti1Image(tumor_label_volume, nib.load(subj.atlas_space_pet).affine, dtype = np.int64).to_filename(subj.tumor_lab)
@@ -166,7 +167,7 @@ def ref_seg(subj):
         else:
             sinus_hd = nib.load(subj.sinus)
             sinus_map = sinus_hd.get_fdata()
-
+        
         distance_map = distance_map.ravel()
         sinus_map = sinus_map.ravel()
         df_tumor = create_tumor_dictionary(distance_map, sinus_map, tumor_index, tumor_idx)
@@ -222,9 +223,13 @@ def ref_seg(subj):
             segmented_volume = np.rint(segmented_volume_hd.get_fdata()).astype(int) 
             
     else:
+        
         if not os.path.exists(subj.volume_seg):
-            distance_mask = distance_map > 0
+            distance_mask = distance_map > 0.30
+            print(np.unique(distance_mask))
+
             mask = (subj.tumor_atlas == subj.tumor_label) & (distance_mask)
+            print(np.unique(mask)) 
             segmented_volume = np.zeros_like(atlas_vol)
             segmented_volume[mask == 1] = 2037
             nib.Nifti1Image(segmented_volume, atlas_hd.affine, dtype= np.int64).to_filename(subj.volume_seg)
@@ -233,3 +238,4 @@ def ref_seg(subj):
             segmented_volume = np.rint(segmented_volume_hd.get_fdata()).astype(int) 
     
     return segmented_volume
+
