@@ -131,11 +131,7 @@ class Subject():
         self.brain = transform(self.prefix, self.pet, self.mri_str, self.mri2pet_tfm, qc_filename=f'{self.qc_dir}/pet_brain.gif', clobber=self.clobber )
         
         # Apply mri2pet transformation to get tumor volume in PET space
-        if int(self.sub) not in [10, 24, 121]:
-            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mrib2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
-        else:
-            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mri2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
-
+        self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mrib2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
         
         # Apply stx2pet transformation to stereotaxic atlas
         self.atlas_space_pet = transform(self.prefix, self.pet, self.atlas_fn, self.stx2pet_tfm, interpolator='nearestNeighbor', qc_filename=f'{self.qc_dir}/atlas_pet_space.gif', clobber=self.clobber )
