@@ -16,7 +16,7 @@ from qc import ImageParam
 
 class Subject():
 
-    def __init__(self, data_dir, out_dir, sub, stx_fn, atlas_fn, Tumor_MRI, clobber=False):
+    def __init__(self, data_dir, out_dir, sub, stx_fn, atlas_fn, atlas_brats, Tumor_MRI, clobber=False):
         
         '''
         Inputs:
@@ -40,9 +40,20 @@ class Subject():
 
         self.mri = get_file(data_dir, f'sub-{sub}_*flair.nii.gz')
         self.mri_str = get_file(data_dir, f'sub-{sub}_*flair_brain_3.nii.gz')
+
+        if int(sub) < 10:
+            self.mri_brats = get_file(data_dir, f'BraTS-GLI-0{sub}-000.nii.gz')
+        else:
+            self.mri_brats = get_file(data_dir, f'BraTS-GLI-{sub}-000.nii.gz')
+            
         self.stx = stx_fn
         self.atlas_fn = atlas_fn
-        self.tumor_MRI = Tumor_MRI+'tumor'+str(sub)+'.nii.gz'
+        self.atlas_brats = atlas_brats
+        if int(sub) < 10:
+            self.tumor_MRI = Tumor_MRI+'BraTS-GLI-0'+str(sub)+'-000-seg.nii.gz'
+        else:
+            self.tumor_MRI = Tumor_MRI+'BraTS-GLI-'+str(sub)+'-000-seg.nii.gz'
+
         
 
         # Outputs :
@@ -60,6 +71,7 @@ class Subject():
         self.tacs_qc_plot = self.qc_dir + f'sub-{sub}_TACs.png'
         self.regline_plot = self.qc_dir + f'sub-{sub}_regline.png'
         self.mri2pet_qc_gif = self.qc_dir + f'sub-{sub}_mri2pet.gif'
+        self.mrib2mri_qc_gif = self.qc_dir + f'sub-{sub}_mrib2mri.gif'
         self.pet2pet_qc_gif = self.qc_dir + f'sub-{sub}_pet2pet.gif'
         self.stx2mri_qc_gif = self.qc_dir + f'sub-{sub}_stx2mri.gif'
 
@@ -72,6 +84,7 @@ class Subject():
         self.mri_space_pet = None
         self.pet_space_mri = None
         self.mri2pet_tfm = None
+        self.mrib2mri_tfm = None
         self.pet2mri_tfm = None
         self.stx_space_mri = None
         self.mri_space_stx = None
@@ -103,21 +116,32 @@ class Subject():
 
         # Align Stereotaxic template to MRI with non-linear SyN transformation
         self.stx2mri()
+        print(self.sub)
+        print(type(self.sub))
+
+        if int(self.sub) not in [10, 24, 121]:
+            self.mri2mri()
 
         # Combine transformations so that we can transform from stereotaxic to PET coord space
         self.stx2pet_tfm = [self.mri2pet_tfm,self.stx2mri_tfm ]
+
+        self.mrib2pet_tfm = [self.mri2pet_tfm, self.mrib2mri_tfm ]
         
         # Apply stx2pet transformation to get a brain mask
         self.brain = transform(self.prefix, self.pet, self.mri_str, self.mri2pet_tfm, qc_filename=f'{self.qc_dir}/pet_brain.gif', clobber=self.clobber )
         
         # Apply mri2pet transformation to get tumor volume in PET space
-        self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mri2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+        if int(self.sub) not in [10, 24, 121]:
+            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mrib2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+        else:
+            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mri2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+
         
         # Apply stx2pet transformation to stereotaxic atlas
         self.atlas_space_pet = transform(self.prefix, self.pet, self.atlas_fn, self.stx2pet_tfm, interpolator='nearestNeighbor', qc_filename=f'{self.qc_dir}/atlas_pet_space.gif', clobber=self.clobber )
 
         # Apply stx2pet transformation to stereotaxic template
-        self.stx_space_pet = transform(self.prefix, self.pet, self.stx, self.stx2pet_tfm,  qc_filename=f'{self.qc_dir}/template_pet_space.gif', clobber=self.clobber)
+        #self.stx_space_pet = transform(self.prefix, self.pet, self.stx, self.stx2pet_tfm,  qc_filename=f'{self.qc_dir}/template_pet_space.gif', clobber=self.clobber)
 
         # Roi and Ref selection
         self = region_selection(self)
@@ -147,9 +171,9 @@ class Subject():
     ### Co-Registration ###
     def mri2pet(self):
         self.mri_space_pet, self.pet_space_mri, self.mri2pet_tfm, self.pet2mri_tfm = align(self.pet, self.mri, transform_method='Rigid', outprefix=f'{self.sub_dir}/sub-{self.sub}_mri2pet_Rigid_', qc_filename = self.mri2pet_qc_gif)
+    
+    def mri2mri(self):
+        self.mri_space_mrib, self.mrib_space_mri, self.mrib2mri_tfm, self.mri2mrib_tfm = align(self.mri, self.atlas_brats, transform_method='SyNAggro', outprefix=f'{self.sub_dir}/sub-{self.sub}_mrib2mri_Rigid_', qc_filename = self.mrib2mri_qc_gif)
 
     def stx2mri(self):
         self.stx_space_mri, self.mri_space_stx, self.stx2mri_tfm, self.mri2stx_tfm = align(self.mri, self.stx, transform_method='SyNAggro', outprefix=f'{self.sub_dir}/sub-{self.sub}_stx2mri_SyN_', qc_filename = self.stx2mri_qc_gif)
- 
-
-
