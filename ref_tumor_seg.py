@@ -142,7 +142,7 @@ def ref_seg(subj):
         tumor_label_volume = create_tumor_label_volume(subj.tumor_atlas, subj.tumor_label, tumor_MRI_vol)
         nib.Nifti1Image(tumor_label_volume, nib.load(subj.atlas_space_pet).affine, dtype = np.int64).to_filename(subj.tumor_lab)
     else:
-        tumorlab_hd = nib.load(subj.atlas_space_pet)
+        tumorlab_hd = nib.load(subj.tumor_lab)
         tumor_label_volume = np.rint(tumorlab_hd.get_fdata()).astype(int)
 
     xstep, ystep, zstep = atlas_hd.header.get_zooms()
