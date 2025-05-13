@@ -1,6 +1,6 @@
 # Pediatric FDOPA Pipeline
 
-### Updating lesions from FLAIR MRI ###
+### Updating lesions segmentations from FLAIR MRI ###
 
 ## About
 
