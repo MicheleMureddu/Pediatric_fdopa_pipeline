@@ -119,8 +119,8 @@ class Subject():
         print(self.sub)
         print(type(self.sub))
 
-        if int(self.sub) not in [10, 24, 121]:
-            self.mri2mri()
+        
+        self.mri2mri()
 
         # Combine transformations so that we can transform from stereotaxic to PET coord space
         self.stx2pet_tfm = [self.mri2pet_tfm,self.stx2mri_tfm ]
