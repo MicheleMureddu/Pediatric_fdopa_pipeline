@@ -112,11 +112,13 @@ The pipeline does not keep track of whether upstream files (e.g., *file_1*) are 
 **pipeline_stage_1** --> *file_1* --> ...(more stages in pipeline)... --> **pipeline_stage_n** --> *file_n*
 
 If you wish to re-run an analysis for a given set of subjects, it is recommended to delete the entire subject directories (or move them to a backup location) and re-run the entire pipeline for those subjects. This way there is no risk of ending up with out of date downstream files that do not reflect the new information in the upstream files that they depend on.
-### Contributors: 
-Michele Mureddu, Rosella Trò and Thomas Funck
 
 ### Publication
 Mureddu, Michele, et al. "A New Tool for Extracting Static and Dynamic Parameters from [18F] F-DOPA PET/CT in Pediatric Gliomas." Journal of Clinical Medicine 13.20 (2024): 6252.
 DOI: https://doi.org/10.3390/jcm13206252
 
 ### Integrating U-Net Module for Pediatric gliomas automated segmentation
+
+
+### Contributors: 
+Michele Mureddu, Rosella Trò, Nicolò Trebino, Federico Giovanni Garau and Thomas Funck
