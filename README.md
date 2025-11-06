@@ -118,3 +118,5 @@ Michele Mureddu, Rosella Trò and Thomas Funck
 ### Publication
 Mureddu, Michele, et al. "A New Tool for Extracting Static and Dynamic Parameters from [18F] F-DOPA PET/CT in Pediatric Gliomas." Journal of Clinical Medicine 13.20 (2024): 6252.
 DOI: https://doi.org/10.3390/jcm13206252
+
+### Integrating U-Net Module for Pediatric gliomas automated segmentation
