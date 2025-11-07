@@ -163,7 +163,7 @@ Now everything is ready for running the entire pipeline:
 
 The user options differs only be adding -DL to the command line input. If you pass it the code will run the U-net modele to delineate the tumor volume from FLAIR MRI otherwise it will consider the lesions in the folder **tumor_MRI**
 
-remember to add in the folder the following folders:
+remember to add in the folder the following subfolders:
 
 * ./brats_flair: dataset for your data in BraTS space
 * ./Lesions_TL/final_preds_fold3: containing the segmentations provided by U-NET model
