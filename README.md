@@ -113,12 +113,65 @@ The pipeline does not keep track of whether upstream files (e.g., *file_1*) are 
 
 If you wish to re-run an analysis for a given set of subjects, it is recommended to delete the entire subject directories (or move them to a backup location) and re-run the entire pipeline for those subjects. This way there is no risk of ending up with out of date downstream files that do not reflect the new information in the upstream files that they depend on.
 
+### Integrating U-Net Module for Pediatric gliomas automated segmentation
+
+### Dataset preparation for running the predictive U-Net module
+You have to create a folder **brats_flair** to store the FLAIR data skullstripped and oriented as BRATS data. The folder should look like this:
+
+```
+ /brats_flair
+  │
+  ├────train
+  │      ├──BraTS-GLI-01
+  │      │      └──BraTS-GLI-01-000_flair.nii.gz
+  │      │      └──BraTS-GLI-01-000_seg.nii.gz
+  │      ├──BraTS-GLI-02
+  │      │      └──BraTS-GLI-02-000_flair.nii.gz
+  │      ...    └──...
+  │
+  └────val
+         ├BraTS-GLI-03
+  │      │      └──BraTS-GLI-03-000_flair.nii.gz
+  │      │      └──BraTS-GLI-03-000_seg.nii.gz
+  │      ├──BraTS-GLI-04
+  │      │      └──BraTS-GLI-03-000_flair.nii.gz
+  │      ...    └──...
+         ...    └──...
+```
+Since the model is already train you should fill only the BraTS2021_val folder. (keeping the BRATS name because the model was pre-traine dwith BRATS data).
+
+First you should run the prepare.py script to arrange the data:
+```
+ python prepare.py [--flair]
+```
+We are considering only the model with the FLAIR MRI.
+The next step consists in preprocessing all patients by cropping the volume
+```
+ python preprocess.py --task train --ohe --exec_mode training
+ python preprocess.py --task val --ohe --exec_mode test
+```
+
+Now everything is ready for running the entire pipeline:
+### User options
+
+* -i : Path for input data directory
+* -o : Path for output file directory
+* -s : Path for stereotaxic template file; default=atlas/mni_icbm152_t1_tal_nlin_asym_09c.nii.gz
+* -a : Path for stereotaxic label file; default='atlas/dka.nii.gz'
+* -vol_MRI : Path for flair tumor masks; default='tumor_MRI/'
+* -DL: U-Net segmentation and Postprocess)
+
+The user options differs only be adding -DL to the command line input. If you pass it the code will run the U-net modele to delineate the tumor volume from FLAIR MRI otherwise it will consider the lesions in the folder **tumor_MRI**
+
+### Contributors: 
+Michele Mureddu, Rosella Trò, Nicolò Trebino, Federico Giovanni Garau and Thomas Funck
+
 ### Publication
 Mureddu, Michele, et al. "A New Tool for Extracting Static and Dynamic Parameters from [18F] F-DOPA PET/CT in Pediatric Gliomas." Journal of Clinical Medicine 13.20 (2024): 6252.
 DOI: https://doi.org/10.3390/jcm13206252
 
-### Integrating U-Net Module for Pediatric gliomas automated segmentation
+### References
 
+Bianconi, Andrea, et al. "Deep learning-based algorithm for postoperative glioblastoma MRI segmentation: a promising new tool for tumor burden assessment." Brain Informatics 10.1 (2023): 26.
 
-### Contributors: 
-Michele Mureddu, Rosella Trò, Nicolò Trebino, Federico Giovanni Garau and Thomas Funck
+Futrega, Michał, et al. "Optimized U-Net for brain tumor segmentation." International MICCAI brainlesion workshop. Cham: Springer International Publishing, 2021.
