@@ -42,19 +42,30 @@ class Subject():
         self.mri_str = get_file(data_dir, f'sub-{sub}_*flair_brain_3.nii.gz')
 
         if int(sub) < 10:
-            self.mri_brats = get_file(data_dir, f'BraTS-GLI-0{sub}-000.nii.gz')
+
+            if os.path.exists(f'BraTS-GLI-0{sub}-001.nii.gz'):
+                self.mri_brats = get_file(data_dir, f'BraTS-GLI-0{sub}-001.nii.gz')
+            else:
+                self.mri_brats = get_file(data_dir, f'BraTS-GLI-0{sub}-000.nii.gz')
+
         else:
-            self.mri_brats = get_file(data_dir, f'BraTS-GLI-{sub}-000.nii.gz')
+            if os.path.exists(f'BraTS-GLI-{sub}-001.nii.gz'):
+                self.mri_brats = get_file(data_dir, f'BraTS-GLI-{sub}-001.nii.gz')
+            else:
+                self.mri_brats = get_file(data_dir, f'BraTS-GLI-{sub}-000.nii.gz')
             
         self.stx = stx_fn
         self.atlas_fn = atlas_fn
         self.atlas_brats = atlas_brats
-        if int(sub) < 10:
-            self.tumor_MRI = Tumor_MRI+'BraTS-GLI-0'+str(sub)+'-000-seg.nii.gz'
-        else:
-            self.tumor_MRI = Tumor_MRI+'BraTS-GLI-'+str(sub)+'-000-seg.nii.gz'
 
-        
+        if Tumor_MRI == "./tumor_MRI":
+            self.tumor_MRI = Tumor_MRI+'tumor'+str(sub)+'.nii.gz'
+
+        else: 
+            if int(sub) < 10:
+                self.tumor_MRI = Tumor_MRI+'BraTS-GLI-0'+str(sub)+'-000-seg.nii.gz'
+            else:
+                self.tumor_MRI = Tumor_MRI+'BraTS-GLI-'+str(sub)+'-000-seg.nii.gz'
 
         # Outputs :
         self.sub_dir = out_dir + os.sep + 'sub-'+ sub
@@ -119,8 +130,8 @@ class Subject():
         print(self.sub)
         print(type(self.sub))
 
-        
-        self.mri2mri()
+        if int(self.sub) not in [10, 24, 121]:
+            self.mri2mri()
 
         # Combine transformations so that we can transform from stereotaxic to PET coord space
         self.stx2pet_tfm = [self.mri2pet_tfm,self.stx2mri_tfm ]
@@ -131,7 +142,11 @@ class Subject():
         self.brain = transform(self.prefix, self.pet, self.mri_str, self.mri2pet_tfm, qc_filename=f'{self.qc_dir}/pet_brain.gif', clobber=self.clobber )
         
         # Apply mri2pet transformation to get tumor volume in PET space
-        self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mrib2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+        if int(self.sub) not in [10, 24, 121]:
+            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mrib2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+        else:
+            self.volume_MRI = transform(self.prefix, self.pet, self.tumor_MRI, self.mri2pet_tfm, interpolator='nearestNeighbor',qc_filename=f'{self.qc_dir}/volume_MRI.gif', clobber=self.clobber )
+
         
         # Apply stx2pet transformation to stereotaxic atlas
         self.atlas_space_pet = transform(self.prefix, self.pet, self.atlas_fn, self.stx2pet_tfm, interpolator='nearestNeighbor', qc_filename=f'{self.qc_dir}/atlas_pet_space.gif', clobber=self.clobber )
