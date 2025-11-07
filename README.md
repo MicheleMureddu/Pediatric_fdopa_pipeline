@@ -159,7 +159,7 @@ Now everything is ready for running the entire pipeline:
 * -s : Path for stereotaxic template file; default=atlas/mni_icbm152_t1_tal_nlin_asym_09c.nii.gz
 * -a : Path for stereotaxic label file; default='atlas/dka.nii.gz'
 * -vol_MRI : Path for flair tumor masks; default='tumor_MRI/'
-* -DL: U-Net segmentation and Postprocess)
+* -DL: U-Net segmentation and Postprocess
 
 The user options differs only be adding -DL to the command line input. If you pass it the code will run the U-net modele to delineate the tumor volume from FLAIR MRI otherwise it will consider the lesions in the folder **tumor_MRI**
 
