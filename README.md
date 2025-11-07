@@ -170,7 +170,7 @@ Michele Mureddu, Rosella Trò, Nicolò Trebino, Federico Giovanni Garau and Thom
 Mureddu, Michele, et al. "A New Tool for Extracting Static and Dynamic Parameters from [18F] F-DOPA PET/CT in Pediatric Gliomas." Journal of Clinical Medicine 13.20 (2024): 6252.
 DOI: https://doi.org/10.3390/jcm13206252
 
-### References for U-NET Code
+### Acknoledgements for U-NET Code
 
 Bianconi, Andrea, et al. "Deep learning-based algorithm for postoperative glioblastoma MRI segmentation: a promising new tool for tumor burden assessment." Brain Informatics 10.1 (2023): 26.
 
