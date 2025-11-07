@@ -168,6 +168,7 @@ remember to add in the folder the following folders:
 * ./brats_flair: dataset for your data in BraTS space
 * ./Lesions_TL/final_preds_fold3: containing the segmentations provided by U-NET model
 * ./tumor_MRI: containing the segmentations provided by you
+* results folder with checkpoint for running the U-NET model is available here: https://drive.google.com/drive/folders/1oV6fCO0hyLLKvPXVVSzbTTthy3ShJbrD?usp=share_link
 
 ### Contributors: 
 Michele Mureddu, Rosella Trò, Nicolò Trebino, Federico Giovanni Garau and Thomas Funck
