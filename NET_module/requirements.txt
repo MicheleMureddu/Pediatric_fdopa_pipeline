@@ -1,0 +1,15 @@
+git+https://github.com/NVIDIA/dllogger
+joblib==1.0.1
+monai==0.9.1
+nibabel==3.2.1
+pytorch-lightning==1.6.5
+rich==12.2.0
+scikit-image==0.18.3
+scikit-learn==1.0
+scipy==1.7.3
+torchinfo==1.7.0
+torchtext==0.9.1
+https://download.pytorch.org/whl/cu101/torch-1.8.1%2Bcu101-cp37-cp37m-linux_x86_64.whl
+https://download.pytorch.org/whl/cu101/torchvision-0.9.1%2Bcu101-cp37-cp37m-linux_x86_64.whl
+--extra-index-url https://developer.download.nvidia.com/compute/redist/nightly --upgrade nvidia-dali-nightly-cuda102
+
